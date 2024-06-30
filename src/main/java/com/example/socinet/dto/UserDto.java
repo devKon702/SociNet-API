@@ -1,10 +1,7 @@
 package com.example.socinet.dto;
 
-import com.example.socinet.entity.Account;
 import com.example.socinet.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;

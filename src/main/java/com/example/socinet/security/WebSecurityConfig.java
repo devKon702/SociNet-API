@@ -80,8 +80,8 @@ public class WebSecurityConfig {
 
     @Bean
     public FirebaseApp initializeFirebaseApp() throws Exception{
-        FileInputStream serviceAccount =
-                new FileInputStream("src/main/resources/firebase-secret.json");
+        Resource resource = new ClassPathResource("firebase-secret.json");
+        InputStream serviceAccount = resource.getInputStream();
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

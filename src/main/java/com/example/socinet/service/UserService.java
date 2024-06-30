@@ -1,15 +1,12 @@
 package com.example.socinet.service;
 
 import com.example.socinet.dto.UserDto;
-import com.example.socinet.entity.Account;
 import com.example.socinet.entity.User;
 import com.example.socinet.repository.UserRepository;
 import com.example.socinet.security.AccountDetail;
 import com.example.socinet.util.Helper;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -18,12 +15,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepo;
+    private final FirebaseStorageService storageService;
+    private final long MAX_IMAGE_SIZE = 3 * 1024 * 1024;
     public UserDto getUserInfo(){
         AccountDetail accountDetail = Helper.getAccountDetail();
         return new UserDto(accountDetail.getUser());
     }
 
-    public UserDto getOtherUserInfo(Long id) throws Exception {
+    public UserDto getUserInfoById(Long id) throws Exception {
         Optional<User> user = userRepo.findById(id);
         if(user.isPresent()){
             return new UserDto(user.get());
@@ -47,6 +46,13 @@ public class UserService {
         if(!address.isEmpty()) user.setAddress(address);
         if(isMale != null) user.setMale(isMale);
         // Save avatar to firebase
+        if(avatar != null){
+            if(avatar.getSize() > MAX_IMAGE_SIZE) throw new Exception("Avatar size must <= 3MB");
+            String avatarUrl = storageService.upload("images", avatar);
+            user.setAvatarUrl(avatarUrl);
+        }
         return new UserDto(userRepo.save(user));
     }
+
+
 }

@@ -27,8 +27,8 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getOtherUserInfo(@PathVariable Long id) throws Exception{
-        UserDto userDto = userService.getOtherUserInfo(id);
+    public ResponseEntity<?> getUserInfoById(@PathVariable Long id) throws Exception{
+        UserDto userDto = userService.getUserInfoById(id);
         Response response = Response.builder()
                 .isSuccess(true)
                 .message("Get user info success")
@@ -47,7 +47,7 @@ public class UserController {
         UserDto userDto = userService.updateUserInfo(name, phone, school, address, isMale, avatar);
         Response response = Response.builder()
                 .isSuccess(true)
-                .message("Update infor success")
+                .message("Update info success")
                 .data(userDto)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);

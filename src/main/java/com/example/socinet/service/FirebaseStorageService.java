@@ -12,16 +12,14 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class FirebaseStorageService {
+    private final FirebaseApp firebaseApp;
 
     public String upload(String folderName, MultipartFile file) throws IOException {
-        // Tạo file name
-        String fileName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
-        // Khởi tạo Blob
-        BlobId blobId = BlobId.of("socinet-6cfdd.appspot.com", fileName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
-        Storage storage = StorageOptions.getDefaultInstance().getService();
-        // Lưu file
-        Blob blob = storage.create(blobInfo, file.getBytes());
+        String linkStorage = "socinet-6cfdd.appspot.com";
+        Storage storage = StorageClient.getInstance(firebaseApp).bucket().getStorage();
+        String fileName =  System.currentTimeMillis() + "-" + file.getOriginalFilename();
+        Bucket bucket = storage.get(linkStorage);
+        Blob blob = bucket.create(folderName + "/" + fileName, file.getInputStream(), file.getContentType());
         return blob.getMediaLink();
     }
 }
